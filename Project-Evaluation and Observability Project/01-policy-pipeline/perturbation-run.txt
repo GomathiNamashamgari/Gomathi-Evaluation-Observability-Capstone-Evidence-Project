@@ -1,0 +1,12 @@
+EXPERIMENT: Missing endorsements in modified policy copy
+Original contains ENDORSEMENTS: True
+Modified contains ENDORSEMENTS: False
+Configured max retries: 3
+Recorded client calls: 1
+Result type: RetryFutileEscalation
+Escalation field: endorsements
+Escalation category: missing_source
+Detected pattern: endorsements_absent
+Reason: Field 'endorsements' returned null — the source document does not contain this information. Retry is futile; escalate to human review.
+CHECK: PASS — escalated after one recorded call.
+LIMITATION: Controlled recorded response; not a live API extraction.

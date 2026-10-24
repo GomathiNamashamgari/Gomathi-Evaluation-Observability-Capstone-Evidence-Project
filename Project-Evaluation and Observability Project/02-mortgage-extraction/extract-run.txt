@@ -72,3 +72,7 @@
     "discrepancies": []
   }
 }
+
+===== VERBOSE APPRAISAL CLASSIFICATION RUN =====
+mortgage_extractor.pipeline: classify: model=claude-haiku-4-5 in=2169 out=108 type=appraisal
+mortgage_extractor.pipeline: extract: model=claude-haiku-4-5 in=4123 out=407 tool=extract_appraisal

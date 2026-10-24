@@ -8,11 +8,11 @@ own experiment earns more credit).
 
 ### System 1 — validated, routed pipeline
 
-- **Change I made (file + what I changed):** Used the existing test scenario in `tests/test_us01_retry.py` that sets the required `endorsements` field to `None`, representing a missing Schedule A source.
-- **Command I ran:** `.venv/bin/pytest tests/test_us01_retry.py -v`
-- **What I predicted:** The pipeline would identify the `endorsements_absent` pattern and escalate immediately instead of retrying when the source information was missing.
-- **What actually happened (paste the key output line):** `test_ac_01_04_missing_source_halts_immediately PASSED`; the test asserts `RetryFutileEscalation`, `field == "endorsements"`, `detected_pattern == "endorsements_absent"`, and `client.call_count == 1`. Test suite: `13 passed, 1 skipped`.
-- **How this differs from the unperturbed run:** The missing-source case stops after one API call rather than attempting further retries. This is a test-based experiment using a recorded client, not a live API run. The live extraction test was skipped because `ANTHROPIC_API_KEY` was not set.
+- **Change I made (file + what I changed):** Copied `data/policies/POL-2025-001.txt` to `perturbations/POL-2025-001-missing-endorsements.txt` and removed the `ENDORSEMENTS` section from the copy. The original policy was left unchanged.
+- **Command I ran:** Attempted `.venv/bin/policy-extractor extract perturbations/POL-2025-001-missing-endorsements.txt --policy-id POL-2025-001`; the live run failed before extraction because no API authentication was configured. Then ran `.venv/bin/pytest tests/test_us01_retry.py::test_ac_01_04_missing_source_halts_immediately -v`.
+- **What I predicted:** When extraction returns `endorsements=None`, validation will classify it as `missing_source` with pattern `endorsements_absent` and escalate immediately rather than retrying.
+- **What actually happened:** The live CLI attempt stopped with an authentication error, so it did not verify extraction of the modified document. The targeted recorded-client test passed: `test_ac_01_04_missing_source_halts_immediately PASSED` (`1 passed`). That test asserts escalation for the missing endorsements field after one recorded-client call.
+- **How this differs from the unperturbed run:** The modified input omits the endorsements section, while the original retains it. The controlled test verifies the pipeline's missing-source escalation behavior, but it is not a live extraction of the modified file. Output is saved in `01-policy-pipeline/perturbation-run.txt`.
 
 ---
 
